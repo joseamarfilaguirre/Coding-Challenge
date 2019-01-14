@@ -14,16 +14,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
-public class LaptopAdapter extends RecyclerView.Adapter<LaptopAdapter.ViewHolder> implements View.OnClickListener {
+public class LaptopAdapter extends RecyclerView.Adapter<LaptopAdapter.ViewHolder> {
     private List<Laptop> mDataset;
     private Context mContext;
 
-    @Override
-    public void onClick(View v) {
-    }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView titleLaptop;
@@ -65,13 +63,16 @@ public class LaptopAdapter extends RecyclerView.Adapter<LaptopAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Laptop latop = mDataset.get(i);
-        viewHolder.titleLaptop.setText(latop.getTitle().substring(0,100).concat("..."));
-        viewHolder.descriptionLaptop.setText(latop.getDescription());
+        Laptop laptop = mDataset.get(i);
+        String desc,text;
+        desc = laptop.getDescription();
+        if (desc.length()>100)text = desc.substring(0,99).concat("...");
+        else text = desc.concat("...");
+        viewHolder.titleLaptop.setText(laptop.getTitle());
+        viewHolder.descriptionLaptop.setText(text);
         Glide.with(mContext)
-                .load(latop.getImage())
-//                .apply(RequestOptions.placeholderOf(R.drawable.paisaje))
-//                .apply(RequestOptions.circleCropTransform())
+                .load(laptop.getImage())
+                .apply(RequestOptions.placeholderOf(R.drawable.default_image))
                 .into(viewHolder.imageLaptop);
     }
     @Override

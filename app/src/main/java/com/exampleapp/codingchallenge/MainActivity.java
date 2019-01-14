@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView listLaptops;
     private List<Laptop> lista = new LinkedList<Laptop>();
     private LaptopAdapter myLaptopAdapter;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private TextView textError;
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        inicialiceList();
+        textError = findViewById(R.id.text_error);
         listLaptops = (RecyclerView) findViewById(R.id.list_laptops);
-
-
-
-
+        inicialiceList();
         listLaptops.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), listLaptops, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -82,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        procesarError();
                         if(error.getMessage() != null) {
                             Log.d("Error Volley", error.getMessage());
                             if( error instanceof NetworkError) {
@@ -105,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         // Add the request to the RequestQueue.
         queue.add(jsonObjectRequest);
         //VolleySingleton.getInstance(getActivity()).addToRequestQueue(StringRequest);
+    }
+
+    private void procesarError() {
+        textError.setText("ocurrió un error. intente más tarde");
+        textError.setVisibility(View.VISIBLE);
     }
 
     private void procesarRespuesta(JSONArray response) {
